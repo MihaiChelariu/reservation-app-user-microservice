@@ -82,9 +82,14 @@ public class UserController {
 
     //USERI NORMALI
     @PostMapping("/saveUser")
-    private VUser saveUser(@RequestBody VUser user) {
-        LOGGER.info("POST " + user);
-        VUser savedUser = userService.saveUser(user);
-        return savedUser;
+    private ResponseEntity<?> saveUser(@RequestBody VUser user) {
+        try {
+            VUser savedUser = userService.saveUser(user);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
+        }
     }
 }

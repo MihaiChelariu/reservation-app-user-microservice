@@ -40,7 +40,7 @@ public class UserService {
 
     public VUser loginUser(String email, String password){
         User user = userRepository.getUserByUserEmail(email);
-        if(user != null && Objects.equals(password, user.getUserPassword()))
+        if(user != null && encoder.matches(password, user.getUserPassword()))
         {
             return mapper.map(user, VUser.class);
         }
@@ -53,7 +53,15 @@ public class UserService {
 
 
     public VUser saveUser(VUser vUser) {
+        // Verifică dacă email-ul există deja în baza de date
+        User existingUser = userRepository.getUserByUserEmail(vUser.getUserEmail());
+        if (existingUser != null) {
+            throw new RuntimeException("Email already in use: " + vUser.getUserEmail());
+        }
+
         User user = mapper.map(vUser, User.class);
+        String encryptedPassword = encoder.encode(vUser.getUserPassword());
+        user.setUserPassword(encryptedPassword);
         userRepository.saveAndFlush(user);
         return vUser;
     }

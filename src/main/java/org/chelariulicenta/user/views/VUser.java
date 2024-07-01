@@ -1,5 +1,6 @@
 package org.chelariulicenta.user.views;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,7 +19,7 @@ public class VUser implements Serializable {
     private String userName;
     @JsonProperty
     private String userEmail;
-    @JsonProperty
+
     private String userPassword;
     @JsonProperty
     private boolean isAdmin;
